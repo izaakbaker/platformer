@@ -1,20 +1,22 @@
-import { IRenderable, isRenderable } from "./renderable";
 import { IArtist } from "../rendering/artist";
-import { Ball } from "./ball";
+import { createBall } from "./ball";
+import { PhysicsSystem } from "../systems/physicsSystem";
+import { RenderingSystem } from "../systems/renderingSystem";
 
-export class World implements IRenderable {
+export class World {
     private entities: any[];
+    private physicsSystem: PhysicsSystem;
+    private renderingSystem: RenderingSystem;
     
-    public constructor() {
+    public constructor(physicsSystem: PhysicsSystem, renderingSystem: RenderingSystem) {
+        this.physicsSystem = physicsSystem;
+        this.renderingSystem = renderingSystem;
         this.entities = [];
-        this.entities.push(new Ball(300, 300, 50));
+        this.entities.push(createBall([300, 300], [0, 0], 50, [1, 0, 0]));
     }
 
-    public renderWith(artist: IArtist): void {
-        this.entities.forEach((entity: any) => {
-            if (isRenderable(entity)) {
-                entity.renderWith(artist);
-            }
-        });
+    public tick() {
+        this.physicsSystem.tick(this.entities);
+        this.renderingSystem.tick(this.entities);
     }
 }

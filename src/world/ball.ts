@@ -1,18 +1,16 @@
-import { IRenderable } from "./renderable";
-import { IArtist } from "../rendering/artist";
+import { Entity } from "../entity/entity";
+import uuid from "uuid";
+import { IPhysicalProperties, physicalPropertiesReducer } from "../entity/physicalProperties";
+import { IRenderingProperties, renderingPropertiesReducer } from "../entity/renderingProperties";
+import { EntityComponent } from "../entity/entityComponent";
 
-export class Ball implements IRenderable {
-    private x: number;
-    private y: number;
-    private radius: number;
-
-    public constructor(x: number, y: number, radius: number) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-    }
-
-    public renderWith(artist: IArtist) {
-        artist.ellipse(this.x, this.y, this.radius);
-    }
+export function createBall(position: number[], velocity: number[], radius: number, color: number[]): Entity {
+    let ball: Entity = new Entity("ball", uuid.v4());
+    const ballPhysicalProperties: IPhysicalProperties = { position, velocity };
+    const ballRenderingProperties: IRenderingProperties = { radius, color };
+    const ballPhysicalPropertiesComponent = new EntityComponent<IPhysicalProperties>(physicalPropertiesReducer, ballPhysicalProperties);
+    const ballRenderingPropertiesComponent = new EntityComponent<IRenderingProperties>(renderingPropertiesReducer, ballRenderingProperties);
+    ball.addComponent("PhysicalProperties", ballPhysicalPropertiesComponent);
+    ball.addComponent("RenderingProperties", ballRenderingPropertiesComponent);
+    return ball;
 }

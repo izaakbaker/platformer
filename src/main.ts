@@ -4,12 +4,16 @@ import url from "url";
 import { ScreenManager } from "./screens/screenManager";
 import { World } from "./world/world";
 import { WebContentsArtist } from "./rendering/webContentsArtist";
+import { PhysicsSystem } from "./systems/physicsSystem";
+import { RenderingSystem } from "./systems/renderingSystem";
 
 let window: BrowserWindow | null = null;
 let screenManager: ScreenManager | null = null;
 let webContentsArtist: WebContentsArtist | null = null;
 let world: World | null = null;
 let tickIntervalId: NodeJS.Timer | null = null;
+let physicsSystem: PhysicsSystem | null = null;
+let renderingSystem: RenderingSystem | null = null;
 
 app.on("ready", () => {
     window = new BrowserWindow({ height: 620, width: 600 });
@@ -21,6 +25,8 @@ app.on("ready", () => {
         screenManager = null;
         world = null;
         webContentsArtist = null;
+        physicsSystem = null;
+        renderingSystem = null;
     });
 
     webContentsArtist = new WebContentsArtist(window.webContents);
@@ -46,6 +52,8 @@ ipcMain.on("quit", () => {
 });
 
 ipcMain.on("start-world", () => {
-    world = new World();
-    world.renderWith(webContentsArtist);
+    renderingSystem = new RenderingSystem(webContentsArtist);
+    physicsSystem = new PhysicsSystem();
+    world = new World(physicsSystem, renderingSystem);
+    world.tick();
 })
