@@ -8,7 +8,7 @@
     "build": "npm run build-ts && npm run copy",
     "build-ts": "tsc",
     "start": "electron --inspect=9090 .",
-    "copy": "cpx \"src/**/*.{html,png,jpg}\" dist" 
+    "copy": "cpx \"src/**/*.{html,png,jpg,css}\" dist" 
   },
   "repository": {
     "type": "git",
