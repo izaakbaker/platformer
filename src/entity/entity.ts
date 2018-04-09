@@ -8,6 +8,7 @@ export class Entity {
     public constructor(type: string, id: string) {
         this.type = type;
         this.id = id;
+        this.components = {};
     }
 
     public getComponent<T>(key: string): EntityComponent<T> | null {
