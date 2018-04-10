@@ -4,7 +4,7 @@ import url from "url";
 import { ScreenManager } from "./screens/screenManager";
 import { World } from "./world/world";
 import { WebContentsArtist } from "./rendering/webContentsArtist";
-import { PhysicsSystem } from "./systems/physicsSystem";
+import { PhysicsSystem, IPhysicalConstants } from "./systems/physicsSystem";
 import { RenderingSystem } from "./systems/renderingSystem";
 
 let window: BrowserWindow | null = null;
@@ -12,6 +12,7 @@ let screenManager: ScreenManager | null = null;
 let webContentsArtist: WebContentsArtist | null = null;
 let world: World | null = null;
 let tickIntervalId: NodeJS.Timer | null = null;
+let constants: IPhysicalConstants | null = null;
 let physicsSystem: PhysicsSystem | null = null;
 let renderingSystem: RenderingSystem | null = null;
 
@@ -27,8 +28,10 @@ app.on("ready", () => {
         webContentsArtist = null;
         physicsSystem = null;
         renderingSystem = null;
+        constants = null;
     });
 
+    constants = { gravity: [0, 0.005, 0] };
     webContentsArtist = new WebContentsArtist(window.webContents);
     screenManager = new ScreenManager(window);
     screenManager.pushScreen("newGameScreen");
@@ -38,8 +41,7 @@ app.on("window-all-closed", () => {
     app.quit();
 });
 
-ipcMain.on("push-screen", (event: any, ...args: any[]) => {
-    const screen: string = args[0];
+ipcMain.on("push-screen", (event: any, screen: string) => {
     screenManager.pushScreen(screen);
 });
 
@@ -53,7 +55,7 @@ ipcMain.on("quit", () => {
 
 ipcMain.on("start-world", () => {
     renderingSystem = new RenderingSystem(webContentsArtist);
-    physicsSystem = new PhysicsSystem();
+    physicsSystem = new PhysicsSystem(constants);
     world = new World(physicsSystem, renderingSystem);
     tickIntervalId = setInterval(() => world.tick(), 15);
 })
