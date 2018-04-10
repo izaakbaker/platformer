@@ -1,4 +1,4 @@
-Platformer
+Playground
 ==========
 
-Hypothetically a 2D Platform game with Electron and Box2D.
+A 2D Sandbox game about forces and particles using GitHub's Electron framework.
