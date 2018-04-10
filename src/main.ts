@@ -7,7 +7,7 @@ let window: BrowserWindow | null = null;
 let screenManager: ScreenManager | null = null;
 
 app.on("ready", () => {
-    window = new BrowserWindow({ height: 620, width: 600 });
+    window = new BrowserWindow({ height: 620, width: 800 });
     window.on("closed", () => {
         window = null;
         screenManager = null;

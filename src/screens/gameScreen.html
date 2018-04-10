@@ -3,7 +3,18 @@
         <link href="gameScreen.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <canvas id="game-canvas" width="600" height="600"/>
+        <div id="game-screen">
+            <canvas id="game-canvas" width="600" height="600"></canvas>
+            <div id="draw-menu">
+                <form id="drawMenuForm">
+                    <h3>Draw:</h3>
+                    <input type="radio" name="draw-menu" class="draw-menu-radio" id="particle" value="PARTICLE"/>
+                    <label for="particle">Particle</label>
+                    <input type="radio" name="draw-menu" class="draw-menu-radio" id="point-force" value="POINT_FORCE"/>
+                    <label for="point-force">Point Force</label>
+                </form>
+            </div>
+        </div>
         <script>
             require("./gameScreen.js");
         </script>

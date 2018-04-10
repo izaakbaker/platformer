@@ -18,9 +18,19 @@ export function squaredMagnitude(v: number[]): number {
     return v.map(component => component * component).reduce((e1, e2) => e1 + e2);
 }
 
+export function magnitude(v: number[]): number {
+    return Math.sqrt(squaredMagnitude(v));
+}
+
+export function limitMagnitude(v: number[], m: number) {
+    if (squaredMagnitude(v) > m * m) {
+        return withMagnitude(v, m);
+    }
+    return [...v];
+}
+
 export function normalized(v: number[]): number[] {
-    const magnitude = Math.sqrt(squaredMagnitude(v));
-    return product(1 / magnitude, v);
+    return product(1 / magnitude(v), v);
 }
 
 export function withMagnitude(v: number[], m: number) {
