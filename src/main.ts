@@ -55,5 +55,5 @@ ipcMain.on("start-world", () => {
     renderingSystem = new RenderingSystem(webContentsArtist);
     physicsSystem = new PhysicsSystem();
     world = new World(physicsSystem, renderingSystem);
-    world.tick();
+    tickIntervalId = setInterval(() => world.tick(), 15);
 })

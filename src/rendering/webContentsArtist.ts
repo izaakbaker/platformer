@@ -8,8 +8,15 @@ export class WebContentsArtist implements IArtist {
         this.webContents = webContents;
     }
 
-    public ellipse(x: number, y: number, radius: number) {
-        console.log(`Ellipse at ${x}, ${y}, with radius ${radius}`);
+    public ellipse(x: number, y: number, radius: number): void {
         this.webContents.send("ellipse", x, y, radius);
+    }
+
+    public rect(x0: number, y0: number, w: number, h: number): void {
+        this.webContents.send("rect", x0, y0, w, h);
+    }
+
+    public fill(r: number, g: number, b: number): void {
+        this.webContents.send("fill", r, g, b);
     }
 }

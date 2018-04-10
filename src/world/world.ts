@@ -12,7 +12,7 @@ export class World {
         this.physicsSystem = physicsSystem;
         this.renderingSystem = renderingSystem;
         this.entities = [];
-        this.entities.push(createBall([300, 300], [0, 0], 50, [1, 0, 0]));
+        this.entities.push(createBall([300, 300], [1, 0], 50, [1, 0, 0]));
     }
 
     public tick() {
