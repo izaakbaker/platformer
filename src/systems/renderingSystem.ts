@@ -16,10 +16,8 @@ export class RenderingSystem {
 
         entities.forEach(entity => {
             const renderingComponent = entity.getComponent<IRenderingProperties>("RenderingProperties");
-            const physicalComponent = entity.getComponent<IPhysicalProperties>("PhysicalProperties");
-            if (renderingComponent !== null && physicalComponent !== null) {
-                const { color, radius } = renderingComponent.getState();
-                const { position } = physicalComponent.getState();
+            if (renderingComponent !== null) {
+                const { color, radius, position } = renderingComponent.getState();
 
                 this.artist.fill(color[0], color[1], color[2]);
                 this.artist.ellipse(position[0], position[1], radius);

@@ -21,5 +21,6 @@ export class Entity {
 
     public addComponent(key: string, component: EntityComponent<any>) {
         this.components[key] = component;
+        component.initializeIn(this);
     }
 }

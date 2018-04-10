@@ -7,6 +7,13 @@ export interface IPhysicalProperties {
     mass: number;
 }
 
+const DEFAULTS: IPhysicalProperties = {
+    position: [0, 0],
+    velocity: [0, 0],
+    appliedForce: [0, 0],
+    mass: 0,
+}
+
 export const SetPosition = TypedAction.define("PhysicalProperties::SetPosition")<{ position: number[] }>();
 export const SetVelocity = TypedAction.define("PhysicalProperties::SetVelocity")<{ velocity: number[] }>();
 export const ApplyForce = TypedAction.define("PhysicalProperties::ApplyForce")<{ force: number[] }>();
@@ -20,4 +27,5 @@ export const physicalPropertiesReducer = TypedReducer.builder<IPhysicalPropertie
         const appliedForce = state.appliedForce.map((component, index) => component + force[index]);
         return setWith(state, { appliedForce });
     })
+    .withDefaultHandler((state = DEFAULTS) => state)
     .build();

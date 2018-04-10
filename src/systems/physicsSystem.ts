@@ -1,6 +1,7 @@
 import { Entity } from "../entity/entity";
 import { EntityComponent } from "../entity/entityComponent";
 import { IPhysicalProperties, SetPosition, ApplyForce, SetVelocity } from "../entity/physicalProperties";
+import { product, sum } from "../math/vector";
 
 export interface IPhysicalConstants {
     gravity: number[];
@@ -21,18 +22,19 @@ export class PhysicsSystem {
 
                 // apply physical forces
                 const { mass } = physicsComponent.getState();
-                const gravitationalForce = this.constants.gravity.map(component => component * mass);
+                const gravitationalForce = product(mass, this.constants.gravity)
                 dispatch(ApplyForce.create({ force: gravitationalForce }));
 
                 // compute acceleration and use it to update velocity
                 const { appliedForce, velocity } = physicsComponent.getState();
                 const acceleration = appliedForce.map(component => component / mass);
-                const newVelocity = velocity.map((component, index) => component + acceleration[index]);
+                const newVelocity = sum(velocity, acceleration);
                 dispatch(SetVelocity.create({ velocity: newVelocity }));
 
                 // use velocity to update position
                 const { position } = physicsComponent.getState();
-                const newPosition = position.map((element, index) => element + newVelocity[index]);
+                console.log(position);
+                const newPosition = sum(position, newVelocity);
                 dispatch(SetPosition.create({ position: newPosition }));
             }
         })
