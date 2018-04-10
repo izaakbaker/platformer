@@ -1,17 +1,28 @@
 import { Particle } from "./particle";
 import { IArtist } from "../rendering/artist";
 import { PointForce } from "./pointForce";
+import { Entity } from "./entity";
 
 export class World {
     private particles: Particle[];
     private pointForces: PointForce[];
 
+    private focusPoint: number[];
+    private focusedEntity: Entity | null;
+
     public constructor() {
         this.particles = [];
         this.pointForces = [];
+        this.focusedEntity = null;
     }
 
     public update(): void {
+        this.focusedEntity = null;
+        this.pointForces.forEach(pointForce => {
+            if (pointForce.isHoveredOver(this.focusPoint)) {
+                this.focusedEntity = pointForce;
+            }
+        })
         this.particles.forEach(particle => {
             this.pointForces.forEach(pointForce => pointForce.actOn(particle));
             particle.move();
@@ -19,10 +30,14 @@ export class World {
     }
 
     public renderWith(artist: IArtist): void {
-        artist.fill(1, 1, 1);
+        artist.reset();
+        artist.setFillColor(1, 1, 1);
         artist.rect(0, 0, 600, 600);
         this.particles.forEach(particle => particle.renderWith(artist));
         this.pointForces.forEach(pointForce => pointForce.renderWith(artist));
+        if (this.focusedEntity !== null) {
+            this.focusedEntity.renderFocusedWith(artist);
+        }
     }
 
     public addParticle(particle: Particle) {
@@ -31,5 +46,9 @@ export class World {
 
     public addPointForce(pointForce: PointForce) {
         this.pointForces.push(pointForce);
+    }
+
+    public focusAt(point: number[]): void {
+        this.focusPoint = point;
     }
 }

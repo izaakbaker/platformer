@@ -32,8 +32,11 @@ canvas.addEventListener("click", (event: MouseEvent) => {
             world.addPointForce(newPointForce);
             break;
     }
-    
 });
+
+canvas.addEventListener("mousemove", (event: MouseEvent) => {
+    world.focusAt([event.offsetX, event.offsetY]);
+})
 
 for (let i = 0; i < drawMenuRadios.length; i++) {
     drawMenuRadios[i].addEventListener("click", (event: MouseEvent) => {

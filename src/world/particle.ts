@@ -1,17 +1,17 @@
 import { IArtist } from "../rendering/artist";
 import { sum, limitMagnitude } from "../math/vector";
+import { Entity } from "./entity";
 
-export class Particle {
+export class Particle extends Entity {
     private static MAX_SPEED: number = 10;
     private static RADIUS: number = 5;
     private static COLOR: number[] = [0, 0, 1];
 
-    private position: number[];
     private velocity: number[];
     private acceleration: number[];
     
     public constructor(initialPosition: number[] = [0, 0], initialVelocity: number[] = [0, 0]) {
-        this.position = initialPosition;
+        super(initialPosition);
         this.velocity = initialVelocity;
         this.acceleration = [0, 0];
     }
@@ -36,7 +36,8 @@ export class Particle {
     }
 
     public renderWith(artist: IArtist): void {
-        artist.fill(Particle.COLOR[0], Particle.COLOR[1], Particle.COLOR[2]);
+        artist.reset();
+        artist.setFillColor(Particle.COLOR[0], Particle.COLOR[1], Particle.COLOR[2]);
         artist.ellipse(this.position[0], this.position[1], Particle.RADIUS);
     }
 
