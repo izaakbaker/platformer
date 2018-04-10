@@ -9,7 +9,3 @@ const quitButton: HTMLButtonElement = document.getElementById("quit") as HTMLBut
 quitButton.addEventListener("click", () => {
     ipcRenderer.send("quit");
 });
-
-ipcRenderer.on("foo", () => {
-    newGameButton.innerHTML = "HI!!!";
-});

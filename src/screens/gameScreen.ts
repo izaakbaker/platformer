@@ -4,18 +4,8 @@ import { CanvasArtist } from "../rendering/canvasArtist";
 
 const canvas: HTMLCanvasElement = document.getElementById("game-canvas") as HTMLCanvasElement;
 const context: CanvasRenderingContext2D = canvas.getContext("2d");
-const artist: CanvasArtist = new CanvasArtist(context);
 
-ipcRenderer.on("ellipse", (event: any, x: number, y: number, radius: number) => {
-    artist.ellipse(x, y, radius);
-});
+const artist: IArtist = new CanvasArtist(context);
 
-ipcRenderer.on("rect", (event: any, x: number, y: number, w: number, h: number) => {
-    artist.rect(x, y, w, h);
-});
-
-ipcRenderer.on("fill", (event: any, r: number, g: number, b: number) => {
-    artist.fill(r, g, b);
-})
-
-ipcRenderer.send("start-world");
+artist.fill(1, 0, 0);
+artist.ellipse(300, 300, 50);
