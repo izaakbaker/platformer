@@ -1,6 +1,7 @@
 import { IArtist } from "../rendering/artist";
 import { sum, limitMagnitude } from "../math/vector";
 import { Entity } from "./entity";
+import uuid from "uuid";
 
 export class Particle extends Entity {
     private static MAX_SPEED: number = 10;
@@ -11,7 +12,7 @@ export class Particle extends Entity {
     private acceleration: number[];
     
     public constructor(initialPosition: number[] = [0, 0], initialVelocity: number[] = [0, 0]) {
-        super(initialPosition);
+        super(`PARTICLE ${uuid.v4()}`, initialPosition);
         this.velocity = initialVelocity;
         this.acceleration = [0, 0];
     }

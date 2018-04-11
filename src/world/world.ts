@@ -17,16 +17,27 @@ export class World {
     }
 
     public update(): void {
+        const previousFocusedEntity = this.focusedEntity;
         this.focusedEntity = null;
         this.pointForces.forEach(pointForce => {
             if (pointForce.isHoveredOver(this.focusPoint)) {
                 this.focusedEntity = pointForce;
             }
-        })
+        });
+        if (this.focusedEntity === null && previousFocusedEntity !== null) {
+            previousFocusedEntity.onLoseFocus();
+        }
+        if (this.focusedEntity !== null && previousFocusedEntity === null) {
+            this.focusedEntity.onFocus();
+        }
+        if (this.focusedEntity !== null && previousFocusedEntity !== null && this.focusedEntity.getId() !== previousFocusedEntity.getId()) {
+            this.focusedEntity.onFocus();
+            previousFocusedEntity.onLoseFocus();
+        }
         this.particles.forEach(particle => {
             this.pointForces.forEach(pointForce => pointForce.actOn(particle));
             particle.move();
-        })
+        });
     }
 
     public renderWith(artist: IArtist): void {
