@@ -3,6 +3,8 @@ import { IArtist } from "../rendering/artist";
 import { PointForce } from "./pointForce";
 import { Entity } from "./entity";
 import { Background } from "./background";
+import { ipcRenderer } from "electron";
+import { NullEntity } from "./nullEntity";
 
 export class World {
     private background: Background;
@@ -11,34 +13,27 @@ export class World {
     private nonParticleEntities: Entity[];
 
     private focusPoint: number[];
-    private focusedEntity: Entity | null;
+    private focusedEntity: Entity;
 
     public constructor() {
         this.background = new Background(this);
         this.particles = [];
         this.pointForces = [];
         this.focusPoint = [0, 0];
-        this.nonParticleEntities = [this.background];
-        this.focusedEntity = null;
+        this.nonParticleEntities = [new NullEntity(), this.background];
+        this.focusedEntity = this.nonParticleEntities[0];
     }
 
     public update(): void {
         const previousFocusedEntity = this.focusedEntity;
-        this.focusedEntity = null;
         this.nonParticleEntities.forEach(entity => {
             if (entity.isHoveredOver(this.focusPoint)) {
-                if (this.focusedEntity == null || this.focusedEntity.getPriority() < entity.getPriority()) {
+                if (this.focusedEntity.getPriority() < entity.getPriority() || this.focusedEntity.willRelinquishFocus()) {
                     this.focusedEntity = entity;
                 }
             }
         });
-        if (this.focusedEntity === null && previousFocusedEntity !== null) {
-            previousFocusedEntity.onLoseFocus();
-        }
-        if (this.focusedEntity !== null && previousFocusedEntity === null) {
-            this.focusedEntity.onFocus();
-        }
-        if (this.focusedEntity !== null && previousFocusedEntity !== null && this.focusedEntity.getId() !== previousFocusedEntity.getId()) {
+        if (this.focusedEntity.getId() !== previousFocusedEntity.getId()) {
             this.focusedEntity.onFocus();
             previousFocusedEntity.onLoseFocus();
         }
@@ -46,7 +41,6 @@ export class World {
             this.pointForces.forEach(pointForce => pointForce.actOn(particle));
             particle.move();
         });
-        console.log("Focused entity is " + this.focusedEntity ? this.focusedEntity.getId() : "null");
     }
 
     public renderWith(artist: IArtist): void {

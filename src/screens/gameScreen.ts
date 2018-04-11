@@ -22,7 +22,7 @@ setInterval(() => {
 }, 15);
 
 canvas.addEventListener("click", (event: MouseEvent) => {
-    world.ifFocusedEntity((entity) => entity.onClick(event));
+    world.ifFocusedEntity(entity => entity.onClick(event));
 });
 
 canvas.addEventListener("mousedown", (event: MouseEvent) => {
@@ -31,11 +31,12 @@ canvas.addEventListener("mousedown", (event: MouseEvent) => {
 
 canvas.addEventListener("mouseup", (event: MouseEvent) => {
     mouseDown = false;
+    world.ifFocusedEntity(entity => entity.onMouseUp(event))
 });
 
 canvas.addEventListener("mousemove", (event: MouseEvent) => {
     if (mouseDown) {
-        world.ifFocusedEntity((entity) => entity.onDrag(event));
+        world.ifFocusedEntity(entity => entity.onDrag(event));
     } else {
         world.focusAt([event.offsetX, event.offsetY]);
     }

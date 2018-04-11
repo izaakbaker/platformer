@@ -21,6 +21,10 @@ app.on("window-all-closed", () => {
     app.quit();
 });
 
+ipcMain.on("log", (event: any, ...args: string[]) => {
+    console.log(...args);
+});
+
 ipcMain.on("push-screen", (event: any, screen: string) => {
     screenManager.pushScreen(screen);
 });

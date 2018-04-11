@@ -3,6 +3,7 @@ import { difference, magnitude, normalized, product, squaredMagnitude } from "..
 import { IArtist } from "../rendering/artist";
 import { Entity } from "./entity";
 import uuid from "uuid";
+import { ipcRenderer } from "electron";
 
 export class PointForce extends Entity {
     private static NORMAL_RADIUS: number = 15;
@@ -12,13 +13,13 @@ export class PointForce extends Entity {
 
     private attraction: number;
     private radius: number;
-    private dragging: boolean;
+    private moving: boolean;
 
     public constructor(initialPosition: number[] = [0, 0], attraction: number = 0) {
         super(`POINT FORCE ${uuid.v4()}`, initialPosition);
         this.attraction = attraction;
         this.radius = PointForce.NORMAL_RADIUS;
-        this.dragging = false;
+        this.moving = false;
     }
 
     public actOn(particle: Particle): void {
@@ -59,11 +60,26 @@ export class PointForce extends Entity {
 
     public onDrag(event: MouseEvent): void {
         const pointer = [event.offsetX, event.offsetY];
-        const pointerToCenter = difference(this.position, pointer);
-        const distance = squaredMagnitude(pointerToCenter);
-        if (distance < PointForce.NORMAL_RADIUS * PointForce.NORMAL_RADIUS) {
+
+        let shouldMove: boolean = this.moving;
+        if (!shouldMove) {
+            const pointerToCenter = difference(this.position, pointer);
+            const distance = squaredMagnitude(pointerToCenter);
+            shouldMove = distance < PointForce.NORMAL_RADIUS * PointForce.NORMAL_RADIUS;
+        }
+
+        if (shouldMove) {
+            this.moving = true;
             this.position = pointer;
         }
+    }
+
+    public onMouseUp(event: MouseEvent): void {
+        this.moving = false;
+    }
+
+    public willRelinquishFocus(): boolean {
+        return !this.moving;
     }
 
     public getPriority(): number {

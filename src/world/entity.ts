@@ -18,8 +18,10 @@ export class Entity {
     public getPriority(): number { return -1; }
     public onFocus(): void { }
     public onClick(event: MouseEvent): void { }
+    public onMouseUp(event: MouseEvent): void { }
     public onDrag(event: MouseEvent): void { }
     public onLoseFocus(): void { }
+    public willRelinquishFocus(): boolean { return true; }
     public renderWith(artist: IArtist): void { }
     public renderFocusedWith(artist: IArtist): void { }
 }
