@@ -12,11 +12,13 @@ export class PointForce extends Entity {
 
     private attraction: number;
     private radius: number;
+    private dragging: boolean;
 
     public constructor(initialPosition: number[] = [0, 0], attraction: number = 0) {
         super(`POINT FORCE ${uuid.v4()}`, initialPosition);
         this.attraction = attraction;
         this.radius = PointForce.NORMAL_RADIUS;
+        this.dragging = false;
     }
 
     public actOn(particle: Particle): void {
@@ -27,21 +29,21 @@ export class PointForce extends Entity {
         particle.accelerate(vectorToUs);
     }
 
-    public onFocus() {
+    public onFocus(): void {
         this.radius = PointForce.FOCUSED_RADIUS;
     }
 
-    public onLoseFocus() {
+    public onLoseFocus(): void {
         this.radius = PointForce.NORMAL_RADIUS;
     }
 
-    public renderWith(artist: IArtist) {
+    public renderWith(artist: IArtist): void {
         artist.reset();
         artist.setFillColor(PointForce.COLOR[0], PointForce.COLOR[1], PointForce.COLOR[2]);
         artist.ellipse(this.position[0], this.position[1], PointForce.NORMAL_RADIUS);
     }
 
-    public renderFocusedWith(artist: IArtist) {
+    public renderFocusedWith(artist: IArtist): void {
         artist.reset();
         artist.setStroke(true);
         artist.setFill(false);
@@ -49,9 +51,22 @@ export class PointForce extends Entity {
         artist.ellipse(this.position[0], this.position[1], PointForce.FOCUSED_RADIUS);
     }
 
-    public isHoveredOver(pointer: number[]) {
+    public isHoveredOver(pointer: number[]): boolean {
         const pointerToCenter = difference(this.position, pointer);
         const distance = squaredMagnitude(pointerToCenter);
         return distance < this.radius * this.radius;
+    }
+
+    public onDrag(event: MouseEvent): void {
+        const pointer = [event.offsetX, event.offsetY];
+        const pointerToCenter = difference(this.position, pointer);
+        const distance = squaredMagnitude(pointerToCenter);
+        if (distance < PointForce.NORMAL_RADIUS * PointForce.NORMAL_RADIUS) {
+            this.position = pointer;
+        }
+    }
+
+    public getPriority(): number {
+        return 20;
     }
 }

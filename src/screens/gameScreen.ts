@@ -4,8 +4,7 @@ import { CanvasArtist } from "../rendering/canvasArtist";
 import { World } from "../world/world";
 import { Particle } from "../world/particle";
 import { PointForce } from "../world/pointForce";
-
-type EntityType = "PARTICLE" | "POINT_FORCE";
+import { EntityType } from "../world/entity";
 
 const canvas: HTMLCanvasElement = document.getElementById("game-canvas") as HTMLCanvasElement;
 const drawMenuRadios: HTMLCollectionOf<Element> = document.getElementsByClassName("draw-menu-radio");
@@ -15,6 +14,7 @@ const artist: IArtist = new CanvasArtist(context);
 const world = new World();
 
 let drawType: EntityType = "PARTICLE";
+let mouseDown: boolean = false;
 
 setInterval(() => {
     world.update();
@@ -22,25 +22,28 @@ setInterval(() => {
 }, 15);
 
 canvas.addEventListener("click", (event: MouseEvent) => {
-    switch (drawType) {
-        case "PARTICLE":
-            const newParticle: Particle = new Particle([event.offsetX, event.offsetY]);
-            world.addParticle(newParticle);
-            break;
-        case "POINT_FORCE":
-            const newPointForce: PointForce = new PointForce([event.offsetX, event.offsetY], 0.5);
-            world.addPointForce(newPointForce);
-            break;
-    }
+    world.ifFocusedEntity((entity) => entity.onClick(event));
+});
+
+canvas.addEventListener("mousedown", (event: MouseEvent) => {
+    mouseDown = true;
+});
+
+canvas.addEventListener("mouseup", (event: MouseEvent) => {
+    mouseDown = false;
 });
 
 canvas.addEventListener("mousemove", (event: MouseEvent) => {
-    world.focusAt([event.offsetX, event.offsetY]);
+    if (mouseDown) {
+        world.ifFocusedEntity((entity) => entity.onDrag(event));
+    } else {
+        world.focusAt([event.offsetX, event.offsetY]);
+    }
 })
 
 for (let i = 0; i < drawMenuRadios.length; i++) {
     drawMenuRadios[i].addEventListener("click", (event: MouseEvent) => {
-        drawType = (event.target as HTMLInputElement).value as EntityType;
+        world.getBackground().setGenerateType((event.target as HTMLInputElement).value as EntityType);
     });
 }
 

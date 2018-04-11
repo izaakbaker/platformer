@@ -1,5 +1,6 @@
 import { IArtist } from "../rendering/artist";
 
+export type EntityType = "PARTICLE" | "POINT_FORCE";
 export class Entity {
     private id: string;
     protected position: number[];
@@ -13,11 +14,11 @@ export class Entity {
         return this.id;
     }
 
-    public isHoveredOver(pointer: number[]): boolean {
-        return false;   
-    }
-
+    public isHoveredOver(pointer: number[]): boolean { return false; }
+    public getPriority(): number { return -1; }
     public onFocus(): void { }
+    public onClick(event: MouseEvent): void { }
+    public onDrag(event: MouseEvent): void { }
     public onLoseFocus(): void { }
     public renderWith(artist: IArtist): void { }
     public renderFocusedWith(artist: IArtist): void { }
