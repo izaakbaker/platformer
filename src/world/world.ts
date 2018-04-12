@@ -45,13 +45,13 @@ export class World {
 
     public renderWith(artist: IArtist): void {
         artist.reset();
-        artist.setFillColor(1, 1, 1);
+        artist.setFillColor(0.9, 0.9, 0.9);
         artist.rect(0, 0, 600, 600);
-        this.particles.forEach(particle => particle.renderWith(artist));
-        this.pointForces.forEach(pointForce => pointForce.renderWith(artist));
         if (this.focusedEntity !== null) {
             this.focusedEntity.renderFocusedWith(artist);
         }
+        this.particles.forEach(particle => particle.renderWith(artist));
+        this.pointForces.forEach(pointForce => pointForce.renderWith(artist));
     }
 
     public addParticle(particle: Particle) {

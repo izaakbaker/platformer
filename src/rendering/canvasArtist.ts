@@ -22,19 +22,28 @@ export class CanvasArtist implements IArtist {
     }
 
     public ellipse(x: number, y: number, radius: number): void {
-        if (this.shouldFill) {
-            this.context.fillStyle = `#${this.toHexString(this.fillColor)}`;
-            this.context.beginPath();
-            this.context.arc(x, y, radius, 0, 2 * Math.PI);
-            this.context.fill();
-        }
-        if (this.shouldStroke) {
-            this.context.strokeStyle = `#${this.toHexString(this.strokeColor)}`;
-            this.context.lineWidth = this.currentLineWidth;
-            this.context.beginPath();
-            this.context.arc(x, y, radius, 0, 2 * Math.PI);
-            this.context.stroke();
-        }
+        this.context.beginPath();
+        this.context.arc(x, y, radius, 0, 2 * Math.PI);
+        this.fillOrStrokePath();
+    }
+
+    public pieSlice(x: number, y: number, radius: number, a0: number, a1: number): void {
+        const angle0 = a0 - (Math.PI / 2);
+        const angle1 = a1 - (Math.PI / 2);
+        this.context.beginPath();
+        this.context.arc(x, y, radius, Math.min(angle0, angle1), Math.max(angle0, angle1));
+        this.fillOrStrokePath();
+
+        const effectiveRadius = radius * 1.02;
+        const a0Point = [x + effectiveRadius * Math.cos(angle0), y + effectiveRadius * Math.sin(angle0)];
+        const a1Point = [x + effectiveRadius * Math.cos(angle1), y + effectiveRadius * Math.sin(angle1)];
+
+        this.context.beginPath();
+        this.context.moveTo(x, y);
+        this.context.lineTo(a0Point[0], a0Point[1]);
+        this.context.lineTo(a1Point[0], a1Point[1]);
+        this.context.lineTo(x, y);
+        this.fillOrStrokePath();
     }
 
     public rect(x0: number, y0: number, w: number, h: number): void {
@@ -71,6 +80,18 @@ export class CanvasArtist implements IArtist {
 
     public setLineWidth(width: number): void {
         this.currentLineWidth = width;
+    }
+
+    private fillOrStrokePath(): void {
+        if (this.shouldFill) {
+            this.context.fillStyle = `#${this.toHexString(this.fillColor)}`;
+            this.context.fill();
+        }
+        if (this.shouldStroke) {
+            this.context.strokeStyle = `#${this.toHexString(this.strokeColor)}`;
+            this.context.lineWidth = this.currentLineWidth;
+            this.context.stroke();
+        }
     }
 
     private toHexString(color: number[]): string {

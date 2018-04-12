@@ -30,7 +30,7 @@ export class Background extends Entity {
                 this.world.addParticle(newParticle);
                 break;
             case "POINT_FORCE":
-                const newPointForce: PointForce = new PointForce(pointer, 0.5);
+                const newPointForce: PointForce = new PointForce(pointer);
                 this.world.addPointForce(newPointForce);
                 break;
         }

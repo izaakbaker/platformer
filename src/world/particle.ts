@@ -5,8 +5,8 @@ import uuid from "uuid";
 
 export class Particle extends Entity {
     private static MAX_SPEED: number = 10;
-    private static RADIUS: number = 5;
-    private static COLOR: number[] = [0, 0, 1];
+    private static RADIUS: number = 3;
+    private static COLOR: number[] = [1, 0.5, 0];
 
     private velocity: number[];
     private acceleration: number[];

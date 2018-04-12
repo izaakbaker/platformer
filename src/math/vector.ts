@@ -14,6 +14,10 @@ export function negative(v: number[]): number[] {
     return v.map(component => -component);
 }
 
+export function dotProduct(v1: number[], v2: number[]): number {
+    return v1.map((component, index) => component * v2[index]).reduce((e1, e2) => e1 + e2);
+}
+
 export function squaredMagnitude(v: number[]): number {
     return v.map(component => component * component).reduce((e1, e2) => e1 + e2);
 }
@@ -33,7 +37,13 @@ export function normalized(v: number[]): number[] {
     return product(1 / magnitude(v), v);
 }
 
-export function withMagnitude(v: number[], m: number) {
+export function withMagnitude(v: number[], m: number): number[] {
     return product(m, normalized(v));
+}
+
+export function angleBetween(v1: number[], v2: number[]): number {
+    const dot = dotProduct(v1, v2);
+    const magTimesMag = magnitude(v1) * magnitude(v2);
+    return Math.acos(dot / magTimesMag);
 }
    
