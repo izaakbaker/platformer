@@ -1,6 +1,6 @@
 import { IArtist } from "../rendering/artist";
 
-export type EntityType = "PARTICLE" | "POINT_FORCE";
+export type EntityType = "PARTICLE" | "POINT_FORCE" | "SCATTERER";
 export class Entity {
     private id: string;
     protected position: number[];
@@ -8,6 +8,14 @@ export class Entity {
     public constructor(id: string, initialPosition: number[]) {
         this.id = id;
         this.position = initialPosition;
+    }
+
+    public getPosition(): number[] {
+        return this.position;
+    }
+
+    public setPosition(position: number[]): void {
+        this.position = position;
     }
 
     public getId() {

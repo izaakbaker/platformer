@@ -3,6 +3,7 @@ import uuid from "uuid";
 import { World } from "./world";
 import { Particle } from "./particle";
 import { PointForce } from "./pointForce";
+import { Scatterer } from "./scatterer";
 
 export class Background extends Entity {
     private generateType: EntityType;
@@ -32,6 +33,10 @@ export class Background extends Entity {
             case "POINT_FORCE":
                 const newPointForce: PointForce = new PointForce(pointer);
                 this.world.addPointForce(newPointForce);
+                break;
+            case "SCATTERER":
+                const newScatterer: Scatterer = new Scatterer(pointer);
+                this.world.addScatterer(newScatterer);
                 break;
         }
     }

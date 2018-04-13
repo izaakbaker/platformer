@@ -42,7 +42,11 @@ export class Particle extends Entity {
         artist.ellipse(this.position[0], this.position[1], Particle.RADIUS);
     }
 
-    public getPosition(): number[] {
-        return this.position;
+    public getVelocity(): number[] {
+        return this.velocity;
+    }
+
+    public setVelocity(velocity: number[]): void {
+        this.velocity = velocity;
     }
 }

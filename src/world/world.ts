@@ -5,11 +5,13 @@ import { Entity } from "./entity";
 import { Background } from "./background";
 import { ipcRenderer } from "electron";
 import { NullEntity } from "./nullEntity";
+import { Scatterer } from "./scatterer";
 
 export class World {
     private background: Background;
     private particles: Particle[];
     private pointForces: PointForce[];
+    private scatterers: Scatterer[];
     private nonParticleEntities: Entity[];
 
     private focusPoint: number[];
@@ -19,6 +21,7 @@ export class World {
         this.background = new Background(this);
         this.particles = [];
         this.pointForces = [];
+        this.scatterers = [];
         this.focusPoint = [0, 0];
         this.nonParticleEntities = [new NullEntity(), this.background];
         this.focusedEntity = this.nonParticleEntities[0];
@@ -39,6 +42,7 @@ export class World {
         }
         this.particles.forEach(particle => {
             this.pointForces.forEach(pointForce => pointForce.actOn(particle));
+            this.scatterers.forEach(scatterer => scatterer.actOn(particle));
             particle.move();
         });
     }
@@ -52,6 +56,7 @@ export class World {
         }
         this.particles.forEach(particle => particle.renderWith(artist));
         this.pointForces.forEach(pointForce => pointForce.renderWith(artist));
+        this.scatterers.forEach(scatterer => scatterer.renderWith(artist));
     }
 
     public addParticle(particle: Particle) {
@@ -61,6 +66,11 @@ export class World {
     public addPointForce(pointForce: PointForce) {
         this.pointForces.push(pointForce);
         this.nonParticleEntities.push(pointForce);
+    }
+
+    public addScatterer(scatterer: Scatterer) {
+        this.scatterers.push(scatterer);
+        this.nonParticleEntities.push(scatterer);
     }
 
     public getBackground(): Background {

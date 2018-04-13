@@ -58,6 +58,28 @@ export class CanvasArtist implements IArtist {
         }
     }
 
+    public polygon(...vertices: number[]): void {
+        this.context.beginPath();
+        this.context.moveTo(vertices[0], vertices[1]);
+        for (let i = 2; i < vertices.length - 1; i += 2) {
+            this.context.lineTo(vertices[i], vertices[i + 1]);
+        }
+        this.context.lineTo(vertices[0], vertices[1]);
+        this.fillOrStrokePath();
+    }
+
+    public star(x: number, y: number, n: number, outerRadius: number, innerRadius: number): void {
+        let vertices: number[] = [];
+        let angle: number = 0;
+        for (let i = 0; i < n * 2; i++) {
+            let radius = i % 2 == 0 ? outerRadius : innerRadius;
+            vertices.push(x + radius * Math.cos(angle));
+            vertices.push(y + radius * Math.sin(angle))
+            angle += (Math.PI / n);
+        }
+        this.polygon(...vertices);
+    }
+
     public setFillColor(r: number, g: number, b: number): void {
         this.fillColor[0] = r;
         this.fillColor[1] = g;
